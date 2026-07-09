@@ -6,7 +6,6 @@ function updateUI(game) {
     if (!game || !game.currentTower) {
         document.getElementById('towerName').textContent = 'Выберите башню';
         document.getElementById('difficultyBadge').textContent = '-';
-        document.getElementById('towerType').textContent = 'Тип: -';
         document.getElementById('currentFloor').textContent = '0';
         document.getElementById('maxFloor').textContent = '0';
         document.getElementById('attempts').textContent = '0';
