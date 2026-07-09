@@ -13,7 +13,7 @@ class Game {
         this.currentTower = null;
         this.currentRing = null;
         this.currentZone = null;
-        this.currentWorld = 'ring'; // 'ring' или 'zone'
+        this.currentWorld = 'ring';
         this.currentLevel = 0;
         this.currentTowerIndex = 0;
         this.attempts = 0;
@@ -24,16 +24,29 @@ class Game {
         // Загружаем данные
         this.rings = EToHData.rings;
         this.zones = EToHData.zones;
+        
+        // Для модального окна
+        this.modalWorld = 'ring';
+        this.modalLevel = 0;
+        this.towerProgress = {};
     }
     
     selectWorld(world) {
         this.currentWorld = world;
         this.currentLevel = 0;
+        // Обновляем модальное окно через ui.js
+        if (window.renderLevels) {
+            window.renderLevels(this);
+            window.renderTowers(this);
+        }
     }
     
     selectLevel(levelIndex) {
         this.currentLevel = levelIndex;
         this.currentTowerIndex = 0;
+        if (window.renderTowers) {
+            window.renderTowers(this);
+        }
     }
     
     selectTower(towerIndex) {
@@ -44,27 +57,50 @@ class Game {
         
         const towerData = level.towers[towerIndex];
         this.currentTowerIndex = towerIndex;
+        
+        // Сохраняем прогресс текущей башни
+        if (this.currentTower) {
+            if (!this.towerProgress) this.towerProgress = {};
+            this.towerProgress[this.currentTower.name] = {
+                currentFloor: this.currentTower.currentFloor,
+                completed: this.currentTower.currentFloor >= this.currentTower.maxFloor,
+                attempts: this.currentTower.attempts || 0
+            };
+        }
+        
+        // Загружаем прогресс новой башни
+        const savedProgress = this.towerProgress && this.towerProgress[towerData.name];
+        
         this.currentTower = {
             name: towerData.name,
             floors: towerData.floors,
             difficulty: towerData.difficulty,
-            currentFloor: 0, // начинаем с 0
+            currentFloor: savedProgress ? savedProgress.currentFloor : 0,
             maxFloor: towerData.floors,
-            attempts: 0
+            attempts: savedProgress ? savedProgress.attempts : 0
         };
         
         // Сброс consistency при смене башни
         this.player.consistency = 0;
         this.attempts = 0;
+        
         this.addLog(`🏰 Выбрана башня: ${towerData.name} (${towerData.floors} этажей)`);
-        this.updateUI();
+        if (savedProgress && savedProgress.currentFloor > 0) {
+            this.addLog(`📌 Продолжение с этажа ${savedProgress.currentFloor}`);
+        }
         
         // Активируем кнопку
-        document.getElementById('btnClimb').disabled = false;
+        const btnClimb = document.getElementById('btnClimb');
+        if (btnClimb) btnClimb.disabled = false;
+        
+        this.updateUI();
     }
     
     climb() {
-        if (!this.currentTower) return;
+        if (!this.currentTower) {
+            this.addLog('⚠️ Сначала выберите башню!');
+            return;
+        }
         
         const tower = this.currentTower;
         const player = this.player;
@@ -77,15 +113,12 @@ class Game {
         
         // Увеличиваем попытки
         this.attempts++;
-        tower.attempts++;
+        tower.attempts = (tower.attempts || 0) + 1;
         
         // Рассчёт шанса падения
         const progress = tower.currentFloor / tower.maxFloor;
         const consistencyBonus = player.consistency / 100;
         const fallChance = progress * (1 - consistencyBonus);
-        
-        // Логируем шанс
-        this.addLog(`📊 Шанс падения: ${Math.round(fallChance * 100)}% (Этаж ${tower.currentFloor}/${tower.maxFloor})`);
         
         // Проверка падения
         if (Math.random() < fallChance) {
@@ -102,7 +135,7 @@ class Game {
             tower.currentFloor++;
             player.totalFloors++;
             
-            // Рост consistency (медленно, но верно)
+            // Рост consistency
             player.consistency = Math.min(100, player.consistency + 0.5);
             
             // Усталость растёт медленно
@@ -116,67 +149,39 @@ class Game {
             }
         }
         
-        // Снижение усталости со временем (пассивно)
+        // Снижение усталости
         player.fatigue = Math.max(0, player.fatigue - player.fatigueDecay);
         
         this.updateUI();
+        
+        // Обновляем модальное окно, если оно открыто
+        if (document.getElementById('towerModal').classList.contains('active')) {
+            if (window.renderTowers) window.renderTowers(this);
+        }
     }
     
     towerDefeated() {
         const tower = this.currentTower;
         this.player.totalTowers++;
         this.addLog(`🎉 БАШНЯ ПРОЙДЕНА! ${tower.name} (${tower.floors} этажей)`);
-        this.addLog(`📊 Попыток: ${tower.attempts}, Consistency: ${Math.round(this.player.consistency)}%`);
+        this.addLog(`📊 Попыток: ${tower.attempts || 0}, Consistency: ${Math.round(this.player.consistency)}%`);
         
         // Бонус: снижение усталости
         this.player.fatigue = Math.max(0, this.player.fatigue - 30);
         
-        // Отключаем кнопку, чтобы игрок выбрал новую башню
-        document.getElementById('btnClimb').disabled = true;
+        // Отключаем кнопку
+        const btnClimb = document.getElementById('btnClimb');
+        if (btnClimb) btnClimb.disabled = true;
+        
+        // Сохраняем прогресс
+        if (!this.towerProgress) this.towerProgress = {};
+        this.towerProgress[tower.name] = {
+            currentFloor: tower.maxFloor,
+            completed: true,
+            attempts: tower.attempts || 0
+        };
         
         this.updateUI();
-    }
-    
-    // Обновление UI для выбора миров
-    updateWorldLevels() {
-        const container = document.getElementById('worldLevels');
-        const world = this.currentWorld === 'ring' ? this.rings : this.zones;
-        
-        container.innerHTML = world.map((level, index) => `
-            <button class="level-btn ${index === this.currentLevel ? 'active' : ''}" 
-                    data-index="${index}"
-                    onclick="game.selectLevel(${index})">
-                ${level.name}
-                <span class="level-diff">${level.difficulty}</span>
-            </button>
-        `).join('');
-        
-        // Обновляем список башен для текущего уровня
-        this.updateTowerList();
-    }
-    
-    updateTowerList() {
-        const container = document.getElementById('towerList');
-        const world = this.currentWorld === 'ring' ? this.rings : this.zones;
-        const level = world[this.currentLevel];
-        
-        if (!level) {
-            container.innerHTML = '<div class="empty-message">Нет башен в этом мире</div>';
-            return;
-        }
-        
-        container.innerHTML = level.towers.map((tower, index) => {
-            const isCompleted = false; // можно позже добавить сохранение
-            return `
-                <button class="tower-btn ${index === this.currentTowerIndex ? 'active' : ''} ${isCompleted ? 'completed' : ''}"
-                        data-index="${index}"
-                        onclick="game.selectTower(${index})">
-                    <span class="tower-name">${tower.name}</span>
-                    <span class="tower-info-small">${tower.floors} этажей • ${tower.difficulty}</span>
-                    ${isCompleted ? '<span class="tower-completed">✅</span>' : ''}
-                </button>
-            `;
-        }).join('');
     }
     
     addLog(message) {
@@ -185,15 +190,20 @@ class Game {
     }
     
     updateUI() {
-        // Реализовано в ui.js
         if (window.updateUI) window.updateUI(this);
     }
     
     start() {
         this.addLog('🔥 Игра запущена! Выберите башню и начните восхождение');
-        this.updateWorldLevels();
+        
+        // Инициализируем модальное окно
+        if (window.renderLevels) {
+            window.renderLevels(this);
+            window.renderTowers(this);
+        }
+        
+        // Таймер для пассивного снижения усталости
         this.tickInterval = setInterval(() => {
-            // Пассивное снижение усталости
             if (this.player) {
                 this.player.fatigue = Math.max(0, this.player.fatigue - this.player.fatigueDecay);
                 this.updateUI();
