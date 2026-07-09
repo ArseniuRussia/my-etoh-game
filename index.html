@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EToH — Eternal Towers of Hell</title>
+    <title>ETBH — Eternal Towers of Hell</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
             <div class="logo">
                 <span class="skull">🏔️</span>
                 <h1>ETERNAL TOWERS OF HELL</h1>
-                <span class="version">v0.0.1</span>
+                <span class="version">v0.3.0</span>
             </div>
             <div class="stats-header">
                 <span>🏆 Башен пройдено: <strong id="totalTowers">0</strong></span>
@@ -21,20 +21,6 @@
                 <span>💀 Падений: <strong id="totalFalls">0</strong></span>
             </div>
         </header>
-
-        <!-- Выбор мира -->
-        <div class="world-selector">
-            <div class="world-tabs">
-                <button class="world-tab active" data-world="ring">Ring</button>
-                <button class="world-tab" data-world="zone">Zone</button>
-            </div>
-            <div class="world-levels" id="worldLevels">
-                <!-- Генерируется JS -->
-            </div>
-            <div class="tower-list" id="towerList">
-                <!-- Генерируется JS -->
-            </div>
-        </div>
 
         <!-- Главная карточка башни -->
         <main class="game-area">
@@ -87,13 +73,14 @@
             <!-- Лог событий -->
             <div class="log-area">
                 <div class="log-entry" id="log1">> Добро пожаловать в ETBH!</div>
-                <div class="log-entry" id="log2">> Выберите башню и начните восхождение</div>
+                <div class="log-entry" id="log2">> Нажмите "Выбрать башню" чтобы начать</div>
                 <div class="log-entry" id="log3">> Удачи, грешник...</div>
             </div>
 
             <!-- Кнопки управления -->
             <div class="controls">
                 <button class="btn btn-primary" id="btnClimb" disabled>⬆ ВЗОБРАТЬСЯ</button>
+                <button class="btn btn-secondary" id="btnChoose">📂 ВЫБРАТЬ БАШНЮ</button>
                 <button class="btn btn-secondary" id="btnStats">📊 СТАТИСТИКА</button>
                 <button class="btn btn-danger" id="btnSave">💾 СОХРАНИТЬ</button>
             </div>
@@ -102,9 +89,56 @@
         <!-- Подвал -->
         <footer class="footer">
             <span>[1] Взобраться</span>
-            <span>[2] Статистика</span>
-            <span>[3] Сохранить</span>
+            <span>[2] Выбрать башню</span>
+            <span>[3] Статистика</span>
+            <span>[4] Сохранить</span>
         </footer>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВЫБОРА БАШНИ -->
+    <div class="modal-overlay" id="towerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📂 ВЫБОР БАШНИ</h2>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Шаг 1: Выбор игры -->
+                <div class="modal-section" id="stepGame">
+                    <h3>Выберите игру</h3>
+                    <div class="game-list">
+                        <button class="game-btn active" data-game="etoh">Eternal Towers of Hell</button>
+                        <!-- Можно добавить другие игры позже -->
+                    </div>
+                </div>
+
+                <!-- Шаг 2: Выбор мира (Ring / Zone) -->
+                <div class="modal-section" id="stepWorld">
+                    <h3>Выберите мир</h3>
+                    <div class="world-tabs-modal">
+                        <button class="world-tab-modal active" data-world="ring">Ring</button>
+                        <button class="world-tab-modal" data-world="zone">Zone</button>
+                    </div>
+                </div>
+
+                <!-- Шаг 3: Выбор уровня (Ring 1-9 / Zone 1-10) -->
+                <div class="modal-section" id="stepLevel">
+                    <h3>Выберите уровень</h3>
+                    <div class="level-grid" id="levelGrid">
+                        <!-- Генерируется JS -->
+                    </div>
+                </div>
+
+                <!-- Шаг 4: Список башен -->
+                <div class="modal-section" id="stepTower">
+                    <h3>Выберите башню</h3>
+                    <div class="tower-grid" id="towerGrid">
+                        <!-- Генерируется JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/data.js"></script>
