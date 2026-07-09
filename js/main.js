@@ -3,61 +3,93 @@ let game;
 
 document.addEventListener('DOMContentLoaded', () => {
     game = new Game();
-    window.game = game; // для доступа из модального окна
+    window.game = game;
     
-    // Инициализация модального окна
     game.modalWorld = 'ring';
     game.modalLevel = 0;
-    game.towerProgress = {}; // сохраняем прогресс по башням
+    game.towerProgress = {};
     
-    // Загрузка сохранения
     if (loadGame(game)) {
         game.updateUI();
     }
     
     game.start();
     
-    // Кнопка "Взобраться"
-    document.getElementById('btnClimb').addEventListener('click', () => {
-        game.climb();
+    // ===== КНОПКИ =====
+    const btnClimb = document.getElementById('btnClimb');
+    const btnChoose = document.getElementById('btnChoose');
+    const btnStats = document.getElementById('btnStats');
+    const btnSave = document.getElementById('btnSave');
+    const modalClose = document.getElementById('modalClose');
+    const modalOverlay = document.getElementById('towerModal');
+    const statsModalClose = document.getElementById('statsModalClose');
+    const statsModalOverlay = document.getElementById('statsModal');
+    
+    console.log('Кнопки найдены:', {
+        btnClimb: !!btnClimb,
+        btnChoose: !!btnChoose,
+        btnStats: !!btnStats,
+        btnSave: !!btnSave
     });
     
-    // Кнопка "Выбрать башню"
-    document.getElementById('btnChoose').addEventListener('click', () => {
-        renderModal(game);
-        openModal();
-    });
+    if (btnClimb) {
+        btnClimb.addEventListener('click', () => {
+            console.log('Клик ВЗОБРАТЬСЯ');
+            game.climb();
+        });
+    }
     
-    // Кнопка "Сохранить"
-    document.getElementById('btnSave').addEventListener('click', () => {
-        // Сохраняем прогресс текущей башни
-        if (game.currentTower) {
-            if (!game.towerProgress) game.towerProgress = {};
-            game.towerProgress[game.currentTower.name] = {
-                currentFloor: game.currentTower.currentFloor,
-                completed: game.currentTower.currentFloor >= game.currentTower.maxFloor,
-                attempts: game.currentTower.attempts || 0
-            };
-        }
-        saveGame(game);
-    });
+    if (btnChoose) {
+        btnChoose.addEventListener('click', () => {
+            console.log('Клик ВЫБРАТЬ БАШНЮ');
+            renderModal(game);
+            openModal();
+        });
+    }
     
-    // Кнопка "Статистика"
-    document.getElementById('btnStats').addEventListener('click', () => {
-        const tower = game.currentTower;
-        if (tower) {
-            game.addLog(`📊 Башня: ${tower.name}, Этаж: ${tower.currentFloor}/${tower.maxFloor}, Попыток: ${tower.attempts || 0}`);
-        } else {
-            game.addLog('📊 Выберите башню для статистики');
-        }
-        game.updateUI();
-    });
+    if (btnStats) {
+        btnStats.addEventListener('click', () => {
+            console.log('Клик СТАТИСТИКА');
+            openStatsModal();
+        });
+    }
     
-    // Закрытие модального окна
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    document.getElementById('towerModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeModal();
-    });
+    if (btnSave) {
+        btnSave.addEventListener('click', () => {
+            console.log('Клик СОХРАНИТЬ');
+            if (game.currentTower) {
+                if (!game.towerProgress) game.towerProgress = {};
+                game.towerProgress[game.currentTower.name] = {
+                    currentFloor: game.currentTower.currentFloor,
+                    completed: game.currentTower.currentFloor >= game.currentTower.maxFloor,
+                    attempts: game.currentTower.attempts || 0,
+                    difficultyValue: game.currentTower.difficultyValue || 0,
+                    difficulty: game.currentTower.difficulty
+                };
+            }
+            saveGame(game);
+        });
+    }
+    
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+    
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    }
+    
+    if (statsModalClose) {
+        statsModalClose.addEventListener('click', closeStatsModal);
+    }
+    
+    if (statsModalOverlay) {
+        statsModalOverlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeStatsModal();
+        });
+    }
     
     // Переключение миров в модальном окне
     document.querySelectorAll('.world-tab-modal').forEach(tab => {
@@ -74,11 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             renderModal(game);
             openModal();
         } else if (e.key === '3') {
-            document.getElementById('btnStats').click();
+            openStatsModal();
         } else if (e.key === '4') {
-            document.getElementById('btnSave').click();
+            document.getElementById('btnSave')?.click();
         } else if (e.key === 'Escape') {
             closeModal();
+            closeStatsModal();
         }
     });
     
@@ -86,4 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         if (game) game.updateUI();
     }, 100);
+    
+    console.log('✅ Игра загружена!');
 });
