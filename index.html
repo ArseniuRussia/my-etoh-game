@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя инкременталка</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header>
+            <h1>🏭 Мой Заводик</h1>
+        </header>
+
+        <!-- Главное табло -->
+        <main>
+            <div class="resource-display">
+                <span class="icon">⚡</span>
+                <span class="count" id="resourceCount">0</span>
+            </div>
+            
+            <!-- Большая кнопка клика -->
+            <button class="click-btn" id="clickBtn">КЛИК!</button>
+            
+            <p class="per-second">Производство: <span id="perSecond">0</span> в сек.</p>
+        </main>
+
+        <!-- Секция с улучшениями -->
+        <section class="upgrades">
+            <h2>Улучшения</h2>
+            <div class="upgrade-card">
+                <span>👷 Шахтер</span>
+                <span>Стоит: 10</span>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="upgrade-card">
+                <span>🏗️ Фабрика</span>
+                <span>Стоит: 100</span>
+                <button class="buy-btn">Купить</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
