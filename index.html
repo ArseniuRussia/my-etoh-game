@@ -2,24 +2,23 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>EToH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EToH — Eternal Towers of Hell</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>">
 </head>
 <body>
     <div id="app">
+        <!-- Шапка (убрали статистику, оставили только название) -->
         <header class="header">
             <div class="logo">
                 <span class="skull">🏔️</span>
                 <h1>ETERNAL TOWERS OF HELL</h1>
-                <span class="version">v0.3.0</span>
-            </div>
-            <div class="stats-header">
-                <span>🏆 Башен пройдено: <strong id="totalTowers">0</strong></span>
-                <span>📈 Всего этажей: <strong id="totalFloors">0</strong></span>
-                <span>💀 Падений: <strong id="totalFalls">0</strong></span>
+                <span class="version">v0.4.0</span>
             </div>
         </header>
 
+        <!-- Главная карточка башни -->
         <main class="game-area">
             <div class="tower-card">
                 <div class="tower-header">
@@ -27,21 +26,25 @@
                     <h2 id="towerName">Выберите башню</h2>
                     <span class="difficulty-badge" id="difficultyBadge">-</span>
                 </div>
+
                 <div class="tower-info">
                     <span class="tower-type" id="towerType">Тип: -</span>
-                    <span class="tower-floors">Этаж: <span id="currentFloor">0</span> / <span id="maxFloor">0</span></span>
-                    <span class="tower-attempts">Попыток: <span id="attempts">0</span></span>
+                    <span class="tower-floors">
+                        Этаж: <span id="currentFloor">0</span> / <span id="maxFloor">0</span>
+                    </span>
+                    <span class="tower-attempts">
+                        Попыток: <span id="attempts">0</span>
+                    </span>
                 </div>
+
+                <!-- Прогресс-бар -->
                 <div class="progress-container">
                     <div class="progress-bar" id="progressBar" style="width: 0%"></div>
                 </div>
                 <div class="progress-text" id="progressText">0%</div>
+
+                <!-- Статусы (убрали усталость) -->
                 <div class="status-grid">
-                    <div class="status-item">
-                        <span class="label">💤 Усталость</span>
-                        <span class="value" id="fatigue">0%</span>
-                        <div class="mini-bar"><div class="mini-fill fatigue-fill" id="fatigueBar" style="width: 0%"></div></div>
-                    </div>
                     <div class="status-item">
                         <span class="label">🔥 Consistency</span>
                         <span class="value" id="consistency">0%</span>
@@ -55,15 +58,21 @@
                         <span class="label">⚡ Прогресс</span>
                         <span class="value" id="progressStatus">0%</span>
                     </div>
+                    <div class="status-item">
+                        <span class="label">🏆 Сложность башни</span>
+                        <span class="value" id="towerDifficultyValue">0.00</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Лог событий -->
             <div class="log-area">
-                <div class="log-entry" id="log1">> Добро пожаловать в ETBH!</div>
+                <div class="log-entry" id="log1">> Добро пожаловать в EToH!</div>
                 <div class="log-entry" id="log2">> Нажмите "Выбрать башню" чтобы начать</div>
                 <div class="log-entry" id="log3">> Удачи, грешник...</div>
             </div>
 
+            <!-- Кнопки управления -->
             <div class="controls">
                 <button class="btn btn-primary" id="btnClimb" disabled>⬆ ВЗОБРАТЬСЯ</button>
                 <button class="btn btn-secondary" id="btnChoose">📂 ВЫБРАТЬ БАШНЮ</button>
@@ -72,6 +81,7 @@
             </div>
         </main>
 
+        <!-- Подвал -->
         <footer class="footer">
             <span>[1] Взобраться</span>
             <span>[2] Выбрать башню</span>
@@ -80,7 +90,7 @@
         </footer>
     </div>
 
-    <!-- Модальное окно -->
+    <!-- МОДАЛЬНОЕ ОКНО ВЫБОРА БАШНИ -->
     <div class="modal-overlay" id="towerModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -109,6 +119,19 @@
                     <h3>Выберите башню</h3>
                     <div class="tower-grid" id="towerGrid"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО СТАТИСТИКИ -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal-content stats-modal">
+            <div class="modal-header">
+                <h2>📊 СТАТИСТИКА</h2>
+                <button class="modal-close" id="statsModalClose">✕</button>
+            </div>
+            <div class="modal-body stats-body" id="statsBody">
+                <!-- Контент генерируется JS -->
             </div>
         </div>
     </div>
