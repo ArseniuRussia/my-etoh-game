@@ -1,19 +1,19 @@
 // main.js
+let game;
+
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new Game();
+    game = new Game();
     
     // Загрузка сохранения
     if (loadGame(game)) {
-        updateUI(game);
-    } else {
-        game.start();
-        updateUI(game);
+        game.updateUI();
     }
+    
+    game.start();
     
     // Кнопка "Взобраться"
     document.getElementById('btnClimb').addEventListener('click', () => {
         game.climb();
-        updateUI(game);
     });
     
     // Кнопка "Сохранить"
@@ -21,22 +21,39 @@ document.addEventListener('DOMContentLoaded', () => {
         saveGame(game);
     });
     
-    // Клавиши 1-4
+    // Кнопка "Статистика"
+    document.getElementById('btnStats').addEventListener('click', () => {
+        const tower = game.currentTower;
+        if (tower) {
+            game.addLog(`📊 Башня: ${tower.name}, Этаж: ${tower.currentFloor}/${tower.maxFloor}, Попыток: ${tower.attempts || 0}`);
+        } else {
+            game.addLog('📊 Выберите башню для статистики');
+        }
+        game.updateUI();
+    });
+    
+    // Переключение между Ring и Zone
+    document.querySelectorAll('.world-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.world-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            game.selectWorld(tab.dataset.world);
+        });
+    });
+    
+    // Клавиши
     document.addEventListener('keydown', (e) => {
         if (e.key === '1') {
             game.climb();
-            updateUI(game);
-        } else if (e.key === '4') {
-            saveGame(game);
         } else if (e.key === '2') {
-            game.addLog(`📊 Башен: ${game.player.totalTowers}, Этажей: ${game.player.totalFloors}`);
-            updateUI(game);
+            document.getElementById('btnStats').click();
         } else if (e.key === '3') {
-            game.addLog('⚙ Меню улучшений в разработке...');
-            updateUI(game);
+            document.getElementById('btnSave').click();
         }
     });
     
-    // Авто-обновление UI каждые 100ms
-    setInterval(() => updateUI(game), 100);
+    // Авто-обновление UI
+    setInterval(() => {
+        if (game) game.updateUI();
+    }, 100);
 });
