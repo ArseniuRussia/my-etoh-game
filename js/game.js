@@ -140,7 +140,7 @@ class Game {
     }
     
     start() {
-        this.addLog('🔥 Игра запущена! Удачи, грешник...');
+        this.addLog('Welcome to hell');
         this.tickInterval = setInterval(() => this.update(), 1000);
     }
     
