@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/style.css">
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +13,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0a0a0a;
 }
 
 #app {
@@ -22,7 +21,7 @@ body {
     padding: 20px;
 }
 
-/* Шапка */
+/* ===== ШАПКА ===== */
 .header {
     background: #1a0b1e;
     border: 1px solid #2c1a30;
@@ -72,17 +71,13 @@ body {
     color: #e8d5b0;
 }
 
-/* Карточка башни */
+/* ===== КАРТОЧКА БАШНИ ===== */
 .tower-card {
     background: #1a0b1e;
     border: 1px solid #2c1a30;
     border-radius: 16px;
     padding: 30px;
     margin-bottom: 20px;
-}
-
-.tower-card:hover {
-    border-color: #8e44ad;
 }
 
 .tower-header {
@@ -124,7 +119,11 @@ body {
     color: #e8d5b0;
 }
 
-/* Прогресс-бар */
+.tower-attempts {
+    color: #8e44ad;
+}
+
+/* ===== ПРОГРЕСС-БАР ===== */
 .progress-container {
     width: 100%;
     height: 20px;
@@ -148,7 +147,7 @@ body {
     color: #666;
 }
 
-/* Сетка статусов */
+/* ===== СТАТУСЫ ===== */
 .status-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -200,21 +199,7 @@ body {
     background: #8e44ad;
 }
 
-.auto-badge {
-    font-size: 10px;
-    color: #2ecc71;
-    background: #0a1a0a;
-    padding: 2px 8px;
-    border-radius: 10px;
-    float: right;
-    display: none;
-}
-
-.auto-badge.active {
-    display: inline-block;
-}
-
-/* Лог */
+/* ===== ЛОГ ===== */
 .log-area {
     background: #0a0a0a;
     border: 1px solid #1a0b1e;
@@ -235,7 +220,7 @@ body {
     color: #e8d5b0;
 }
 
-/* Кнопки */
+/* ===== КНОПКИ ===== */
 .controls {
     display: flex;
     gap: 10px;
@@ -265,8 +250,10 @@ body {
     background: #e74c3c;
 }
 
-.btn-primary:active {
-    transform: scale(0.97);
+.btn-primary:disabled {
+    background: #2c1a30;
+    color: #666;
+    cursor: not-allowed;
 }
 
 .btn-secondary {
@@ -290,7 +277,7 @@ body {
     color: #c0392b;
 }
 
-/* Подвал */
+/* ===== ПОДВАЛ ===== */
 .footer {
     margin-top: 20px;
     padding: 12px;
@@ -304,152 +291,8 @@ body {
     margin: 0 15px;
 }
 
-/* Адаптивность */
-@media (max-width: 600px) {
-    .status-grid {
-        grid-template-columns: 1fr;
-    }
-    .controls {
-        flex-direction: column;
-    }
-    .btn {
-        min-width: unset;
-    }
-    /* Выбор миров */
-.world-selector {
-    background: #1a0b1e;
-    border: 1px solid #2c1a30;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.world-tabs {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.world-tab {
-    padding: 8px 20px;
-    background: #0a0a0a;
-    border: 1px solid #2c1a30;
-    border-radius: 8px;
-    color: #666;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.world-tab.active {
-    background: #2c1a30;
-    color: #e8d5b0;
-    border-color: #8e44ad;
-}
-
-.world-tab:hover {
-    border-color: #8e44ad;
-}
-
-.world-levels {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.level-btn {
-    padding: 6px 14px;
-    background: #0a0a0a;
-    border: 1px solid #2c1a30;
-    border-radius: 6px;
-    color: #666;
-    cursor: pointer;
-    font-size: 13px;
-    transition: all 0.2s;
-}
-
-.level-btn.active {
-    background: #2c1a30;
-    color: #e8d5b0;
-    border-color: #8e44ad;
-}
-
-.level-btn:hover {
-    border-color: #8e44ad;
-}
-
-.level-diff {
-    font-size: 10px;
-    color: #8e44ad;
-    margin-left: 5px;
-}
-
-.tower-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 15px;
-    border-top: 1px solid #1a0b1e;
-}
-
-.tower-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 16px;
-    background: #0a0a0a;
-    border: 1px solid #2c1a30;
-    border-radius: 8px;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 150px;
-}
-
-.tower-btn.active {
-    background: #2c1a30;
-    border-color: #8e44ad;
-    color: #e8d5b0;
-}
-
-.tower-btn:hover {
-    border-color: #8e44ad;
-}
-
-.tower-btn.completed {
-    border-color: #2ecc71;
-    opacity: 0.7;
-}
-
-.tower-name {
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.tower-info-small {
-    font-size: 11px;
-    color: #666;
-    margin-top: 3px;
-}
-
-.tower-completed {
-    margin-left: auto;
-    color: #2ecc71;
-}
-
-.empty-message {
-    color: #666;
-    padding: 10px;
-    text-align: center;
-    width: 100%;
-}
-
-/* Добавляем попытки в карточку */
-.tower-attempts {
-    color: #8e44ad;
-}
-    .modal-overlay {
+/* ===== МОДАЛЬНОЕ ОКНО ===== */
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -460,16 +303,10 @@ body {
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 0.3s ease;
 }
 
 .modal-overlay.active {
     display: flex;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .modal-content {
@@ -481,12 +318,6 @@ body {
     max-height: 85vh;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-header {
@@ -516,7 +347,6 @@ body {
 
 .modal-close:hover {
     color: #e74c3c;
-    transform: rotate(90deg);
 }
 
 .modal-body {
@@ -528,21 +358,14 @@ body {
 .modal-body::-webkit-scrollbar {
     width: 6px;
 }
-
 .modal-body::-webkit-scrollbar-track {
     background: #0a0a0a;
 }
-
 .modal-body::-webkit-scrollbar-thumb {
     background: #4a2a50;
     border-radius: 3px;
 }
 
-.modal-body::-webkit-scrollbar-thumb:hover {
-    background: #8e44ad;
-}
-
-/* Секции модального окна */
 .modal-section {
     margin-bottom: 25px;
 }
@@ -556,7 +379,7 @@ body {
     letter-spacing: 1px;
 }
 
-/* Шаг 1: Игры */
+/* Кнопки в модалке */
 .game-list {
     display: flex;
     gap: 10px;
@@ -585,7 +408,6 @@ body {
     border-color: #8e44ad;
 }
 
-/* Шаг 2: Миры (Ring / Zone) */
 .world-tabs-modal {
     display: flex;
     gap: 5px;
@@ -612,7 +434,6 @@ body {
     border-color: #8e44ad;
 }
 
-/* Шаг 3: Уровни (Ring 1-9 / Zone 1-10) */
 .level-grid {
     display: flex;
     flex-wrap: wrap;
@@ -649,7 +470,6 @@ body {
     margin-top: 2px;
 }
 
-/* Шаг 4: Башни (с карточками) */
 .tower-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -663,13 +483,11 @@ body {
     padding: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
 }
 
 .tower-card-modal:hover {
     border-color: #8e44ad;
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(142, 68, 173, 0.15);
 }
 
 .tower-card-modal.active {
@@ -725,7 +543,6 @@ body {
     border: 1px solid #2c1a30;
 }
 
-/* Дополнительная информация при наведении (расширение) */
 .tower-card-modal .tower-hover-info {
     max-height: 0;
     overflow: hidden;
@@ -756,7 +573,6 @@ body {
     color: #e8d5b0;
 }
 
-/* Пустое сообщение */
 .empty-message-modal {
     color: #666;
     padding: 20px;
@@ -764,24 +580,22 @@ body {
     grid-column: 1 / -1;
 }
 
-/* Адаптивность модального окна */
+/* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 600px) {
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+    .controls {
+        flex-direction: column;
+    }
+    .btn {
+        min-width: unset;
+    }
     .modal-content {
         width: 95%;
         max-height: 90vh;
     }
-    
     .tower-grid {
         grid-template-columns: 1fr;
     }
-    
-    .modal-header h2 {
-        font-size: 16px;
-    }
-    
-    .level-btn-modal {
-        min-width: 60px;
-        font-size: 12px;
-    }
-}
 }
