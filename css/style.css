@@ -1,4 +1,3 @@
-/* style.css */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +12,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(ellipse at center, #1a0b1e 0%, #0a0a0a 70%);
+    background: #0a0a0a;
 }
 
 #app {
@@ -24,12 +23,11 @@ body {
 
 /* Шапка */
 .header {
-    background: linear-gradient(135deg, #2c1a30, #1a0b1e);
-    border: 1px solid #4a2a50;
+    background: #1a0b1e;
+    border: 1px solid #2c1a30;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: none;
 }
 
 .logo {
@@ -42,28 +40,19 @@ body {
 .skull {
     font-size: 28px;
     color: #c0392b;
-    text-shadow: none;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
 }
 
 .logo h1 {
     font-size: 22px;
     font-weight: 700;
-    background: linear-gradient(90deg, #e8d5b0, #f1c40f);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #e8d5b0;
     letter-spacing: 2px;
 }
 
 .version {
     font-size: 12px;
     color: #8e44ad;
-    background: #2c1a30;
+    background: #0a0a0a;
     padding: 2px 10px;
     border-radius: 10px;
     margin-left: auto;
@@ -73,9 +62,9 @@ body {
     display: flex;
     gap: 30px;
     font-size: 14px;
-    color: #bdc3c7;
+    color: #666;
     padding-top: 10px;
-    border-top: 1px solid #2c1a30;
+    border-top: 1px solid #1a0b1e;
 }
 
 .stats-header strong {
@@ -84,18 +73,15 @@ body {
 
 /* Карточка башни */
 .tower-card {
-    background: linear-gradient(145deg, #1a0b1e, #120a16);
-    border: 1px solid #4a2a50;
+    background: #1a0b1e;
+    border: 1px solid #2c1a30;
     border-radius: 16px;
     padding: 30px;
     margin-bottom: 20px;
-    box-shadow: none;
-    transition: all 0.3s ease;
 }
 
 .tower-card:hover {
     border-color: #8e44ad;
-    box-shadow: none;
 }
 
 .tower-header {
@@ -120,16 +106,16 @@ body {
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-    background: #2c1a30;
+    background: #0a0a0a;
     color: #e74c3c;
-    border: 1px solid #c0392b;
+    border: 1px solid #2c1a30;
 }
 
 .tower-info {
     display: flex;
     gap: 30px;
     font-size: 14px;
-    color: #bdc3c7;
+    color: #666;
     margin-bottom: 15px;
 }
 
@@ -144,22 +130,21 @@ body {
     background: #0a0a0a;
     border-radius: 10px;
     overflow: hidden;
-    border: 1px solid #2c1a30;
+    border: 1px solid #1a0b1e;
     margin: 10px 0 5px;
 }
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #c0392b, #e74c3c, #f1c40f);
+    background: linear-gradient(90deg, #c0392b, #e74c3c);
     border-radius: 10px;
     transition: width 0.3s ease;
-    box-shadow: none;
 }
 
 .progress-text {
     text-align: right;
     font-size: 12px;
-    color: #8e44ad;
+    color: #666;
 }
 
 /* Сетка статусов */
@@ -169,7 +154,7 @@ body {
     gap: 15px;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #2c1a30;
+    border-top: 1px solid #1a0b1e;
 }
 
 .status-item {
@@ -181,7 +166,7 @@ body {
 
 .status-item .label {
     font-size: 13px;
-    color: #8e44ad;
+    color: #666;
 }
 
 .status-item .value {
@@ -207,11 +192,11 @@ body {
 }
 
 .fatigue-fill {
-    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    background: #e74c3c;
 }
 
 .consistency-fill {
-    background: linear-gradient(90deg, #8e44ad, #3498db);
+    background: #8e44ad;
 }
 
 .auto-badge {
@@ -226,12 +211,6 @@ body {
 
 .auto-badge.active {
     display: inline-block;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
 }
 
 /* Лог */
@@ -247,7 +226,7 @@ body {
 }
 
 .log-entry {
-    color: #8e44ad;
+    color: #666;
     padding: 2px 0;
 }
 
@@ -277,14 +256,12 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    background: #c0392b;
     color: white;
-    box-shadow: none;
 }
 
 .btn-primary:hover {
-    transform: scale(1.02);
-    box-shadow: none;
+    background: #e74c3c;
 }
 
 .btn-primary:active {
@@ -292,26 +269,24 @@ body {
 }
 
 .btn-secondary {
-    background: #2c1a30;
+    background: #1a0b1e;
     color: #e8d5b0;
-    border: 1px solid #4a2a50;
+    border: 1px solid #2c1a30;
 }
 
 .btn-secondary:hover {
-    background: #3c2a40;
-    border-color: #8e44ad;
+    background: #2c1a30;
 }
 
 .btn-danger {
-    background: #1a0b1e;
+    background: #0a0a0a;
     color: #8e44ad;
-    border: 1px solid #4a2a50;
+    border: 1px solid #2c1a30;
 }
 
 .btn-danger:hover {
-    background: #2c1a30;
-    border-color: #c0392b;
-    color: #e74c3c;
+    background: #1a0b1e;
+    color: #c0392b;
 }
 
 /* Подвал */
@@ -320,7 +295,7 @@ body {
     padding: 12px;
     text-align: center;
     font-size: 12px;
-    color: #4a2a50;
+    color: #2c1a30;
     border-top: 1px solid #1a0b1e;
 }
 
