@@ -11,87 +11,103 @@
         <!-- Шапка -->
         <header class="header">
             <div class="logo">
-                <span class="skull">☠</span>
+                <span class="skull">🏔️</span>
                 <h1>ETERNAL TOWERS OF HELL</h1>
-                <span class="version">v0.1.0</span>
+                <span class="version">v0.2.0</span>
             </div>
             <div class="stats-header">
-                <span>🏆 Башен побеждено: <strong id="totalTowers">0</strong></span>
+                <span>🏆 Башен пройдено: <strong id="totalTowers">0</strong></span>
                 <span>📈 Всего этажей: <strong id="totalFloors">0</strong></span>
+                <span>💀 Падений: <strong id="totalFalls">0</strong></span>
             </div>
         </header>
+
+        <!-- Выбор мира -->
+        <div class="world-selector">
+            <div class="world-tabs">
+                <button class="world-tab active" data-world="ring">Ring</button>
+                <button class="world-tab" data-world="zone">Zone</button>
+            </div>
+            <div class="world-levels" id="worldLevels">
+                <!-- Генерируется JS -->
+            </div>
+            <div class="tower-list" id="towerList">
+                <!-- Генерируется JS -->
+            </div>
+        </div>
 
         <!-- Главная карточка башни -->
         <main class="game-area">
             <div class="tower-card">
                 <div class="tower-header">
                     <span class="tower-icon">🏰</span>
-                    <h2 id="towerName">Цитадель Ужаса</h2>
-                    <span class="difficulty-badge" id="difficultyBadge">Hard</span>
+                    <h2 id="towerName">Выберите башню</h2>
+                    <span class="difficulty-badge" id="difficultyBadge">-</span>
                 </div>
 
                 <div class="tower-info">
-                    <span class="tower-type" id="towerType">Тип: Citadel</span>
+                    <span class="tower-type" id="towerType">Тип: -</span>
                     <span class="tower-floors">
-                        Этажи: <span id="currentFloor">45</span> / <span id="maxFloor">100</span>
+                        Этаж: <span id="currentFloor">0</span> / <span id="maxFloor">0</span>
+                    </span>
+                    <span class="tower-attempts">
+                        Попыток: <span id="attempts">0</span>
                     </span>
                 </div>
 
                 <!-- Прогресс-бар -->
                 <div class="progress-container">
-                    <div class="progress-bar" id="progressBar" style="width: 45%"></div>
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
                 </div>
-                <div class="progress-text" id="progressText">45%</div>
+                <div class="progress-text" id="progressText">0%</div>
 
                 <!-- Статусы -->
                 <div class="status-grid">
                     <div class="status-item">
-                        <span class="label">⚔️ Урон</span>
-                        <span class="value" id="damage">5</span>
-                    </div>
-                    <div class="status-item">
                         <span class="label">💤 Усталость</span>
-                        <span class="value" id="fatigue">23%</span>
-                        <div class="mini-bar"><div class="mini-fill fatigue-fill" id="fatigueBar" style="width: 23%"></div></div>
-                    </div>
-                    <div class="status-item">
-                        <span class="label">⚡ Реген</span>
-                        <span class="value" id="regen">1.2/сек</span>
+                        <span class="value" id="fatigue">0%</span>
+                        <div class="mini-bar"><div class="mini-fill fatigue-fill" id="fatigueBar" style="width: 0%"></div></div>
                     </div>
                     <div class="status-item">
                         <span class="label">🔥 Consistency</span>
-                        <span class="value" id="consistency">67%</span>
-                        <span class="auto-badge" id="autoBadge">АВТО-КЛИК</span>
-                        <div class="mini-bar"><div class="mini-fill consistency-fill" id="consistencyBar" style="width: 67%"></div></div>
+                        <span class="value" id="consistency">0%</span>
+                        <div class="mini-bar"><div class="mini-fill consistency-fill" id="consistencyBar" style="width: 0%"></div></div>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">📊 Шанс падения</span>
+                        <span class="value" id="fallChance">0%</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">⚡ Прогресс</span>
+                        <span class="value" id="progressStatus">0%</span>
                     </div>
                 </div>
             </div>
 
             <!-- Лог событий -->
             <div class="log-area">
-                <div class="log-entry" id="log1">> Добро пожаловать!</div>
-                <div class="log-entry" id="log2">> Нажмите [Взобраться] чтобы начать</div>
+                <div class="log-entry" id="log1">> Добро пожаловать в ETBH!</div>
+                <div class="log-entry" id="log2">> Выберите башню и начните восхождение</div>
                 <div class="log-entry" id="log3">> Удачи, грешник...</div>
             </div>
 
             <!-- Кнопки управления -->
             <div class="controls">
-                <button class="btn btn-primary" id="btnClimb">⬆ ВЗОБРАТЬСЯ</button>
+                <button class="btn btn-primary" id="btnClimb" disabled>⬆ ВЗОБРАТЬСЯ</button>
                 <button class="btn btn-secondary" id="btnStats">📊 СТАТИСТИКА</button>
-                <button class="btn btn-secondary" id="btnUpgrades">⚙ УЛУЧШЕНИЯ</button>
                 <button class="btn btn-danger" id="btnSave">💾 СОХРАНИТЬ</button>
             </div>
         </main>
 
-        <!-- Подвал с управлением клавишами -->
+        <!-- Подвал -->
         <footer class="footer">
             <span>[1] Взобраться</span>
             <span>[2] Статистика</span>
-            <span>[3] Улучшения</span>
-            <span>[4] Сохранить</span>
+            <span>[3] Сохранить</span>
         </footer>
     </div>
 
+    <script src="js/data.js"></script>
     <script src="js/game.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/save.js"></script>
