@@ -21,7 +21,7 @@ class Game {
         const types = [
             { name: 'Room', floors: 1 },
             { name: 'Edifice', floors: 3 },
-            { name: 'Stepple', floors: 5 + Math.floor(Math.random() * 2) },
+            { name: 'Stepple', floors: 5 },
             { name: 'Not Even a Tower', floors: 3 },
             { name: 'Tower', floors: 10 },
             { name: 'Citadel', floors: 12 + Math.floor(Math.random() * 14) },
