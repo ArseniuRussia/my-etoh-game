@@ -29,13 +29,11 @@ class Game {
     selectWorld(world) {
         this.currentWorld = world;
         this.currentLevel = 0;
-        this.updateWorldLevels();
     }
     
     selectLevel(levelIndex) {
         this.currentLevel = levelIndex;
         this.currentTowerIndex = 0;
-        this.updateTowerList();
     }
     
     selectTower(towerIndex) {
