@@ -1,3 +1,7 @@
+// ui.js
+
+// ===== ОСНОВНОЙ UI =====
+
 function updateUI(game) {
     if (!game || !game.currentTower) {
         document.getElementById('towerName').textContent = 'Выберите башню';
@@ -24,7 +28,7 @@ function updateUI(game) {
     
     document.getElementById('towerName').textContent = tower.name;
     document.getElementById('difficultyBadge').textContent = formattedDiff;
-    document.getElementById('difficultyBadge').title = `Сложность: ${diffValue.toFixed(2)}`; // подсказка при наведении
+    document.getElementById('difficultyBadge').title = `Сложность: ${diffValue.toFixed(2)}`;
     document.getElementById('towerType').textContent = `Тип: ${mainName}`;
     document.getElementById('currentFloor').textContent = tower.currentFloor;
     document.getElementById('maxFloor').textContent = tower.maxFloor;
@@ -58,6 +62,7 @@ function updateUI(game) {
         document.getElementById(logs[i]).textContent = '> ' + (game.log[i] || '');
     }
 }
+
 
 // ===== МОДАЛЬНОЕ ОКНО СТАТИСТИКИ =====
 
@@ -170,7 +175,47 @@ function renderStats(game) {
     `;
 }
 
+
 // ===== МОДАЛЬНОЕ ОКНО ВЫБОРА БАШНИ =====
+
+function openModal() {
+    const modal = document.getElementById('towerModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('towerModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function renderModal(game) {
+    if (!game) return;
+    renderLevels(game);
+    renderTowers(game);
+}
+
+function renderLevels(game) {
+    const grid = document.getElementById('levelGrid');
+    if (!grid) return;
+    
+    const world = game.modalWorld || 'ring';
+    const data = world === 'ring' ? game.rings : game.zones;
+    
+    grid.innerHTML = data.map((level, index) => `
+        <button class="level-btn-modal ${index === game.modalLevel ? 'active' : ''}"
+                data-index="${index}"
+                onclick="selectLevel(${index})">
+            ${level.name}
+            <span class="level-diff">${level.difficulty}</span>
+        </button>
+    `).join('');
+}
 
 function renderTowers(game) {
     const grid = document.getElementById('towerGrid');
@@ -207,7 +252,6 @@ function renderTowers(game) {
             statusClass = 'locked';
         }
         
-        // Форматируем сложность для карточки
         const diffDisplay = `${mainName} ${subTier.icon}`;
         
         return `
@@ -248,15 +292,13 @@ function renderTowers(game) {
     }).join('');
 }
 
-// Делаем функции глобальными
-window.updateUI = updateUI;
-window.openStatsModal = openStatsModal;
-window.closeStatsModal = closeStatsModal;
-window.renderStats = renderStats;
-window.renderTowers = renderTowers;
-// Функции выбора в модальном окне
+
+// ===== ФУНКЦИИ ВЫБОРА =====
+
 function selectWorldFromModal(world) {
     const game = window.game;
+    if (!game) return;
+    
     game.modalWorld = world;
     game.modalLevel = 0;
     
@@ -270,6 +312,8 @@ function selectWorldFromModal(world) {
 
 function selectLevel(index) {
     const game = window.game;
+    if (!game) return;
+    
     game.modalLevel = index;
     
     document.querySelectorAll('.level-btn-modal').forEach(btn => {
@@ -281,6 +325,8 @@ function selectLevel(index) {
 
 function selectTowerFromModal(index) {
     const game = window.game;
+    if (!game) return;
+    
     const world = game.modalWorld || 'ring';
     const data = world === 'ring' ? game.rings : game.zones;
     const level = data[game.modalLevel || 0];
@@ -288,13 +334,15 @@ function selectTowerFromModal(index) {
     
     if (!towerData) return;
     
-    // Сохраняем прогресс текущей башни перед сменой
+    // Сохраняем прогресс текущей башни
     if (game.currentTower) {
         if (!game.towerProgress) game.towerProgress = {};
         game.towerProgress[game.currentTower.name] = {
             currentFloor: game.currentTower.currentFloor,
             completed: game.currentTower.currentFloor >= game.currentTower.maxFloor,
-            attempts: game.currentTower.attempts || 0
+            attempts: game.currentTower.attempts || 0,
+            difficultyValue: game.currentTower.difficultyValue || 0,
+            difficulty: game.currentTower.difficulty
         };
     }
     
@@ -305,12 +353,12 @@ function selectTowerFromModal(index) {
         name: towerData.name,
         floors: towerData.floors,
         difficulty: towerData.difficulty,
+        difficultyValue: towerData.difficultyValue || 0,
         currentFloor: savedProgress ? savedProgress.currentFloor : 0,
         maxFloor: towerData.floors,
         attempts: savedProgress ? savedProgress.attempts : 0
     };
     
-    // Сброс consistency при смене башни
     game.player.consistency = 0;
     
     game.addLog(`🏰 Выбрана башня: ${towerData.name} (${towerData.floors} этажей)`);
@@ -322,10 +370,18 @@ function selectTowerFromModal(index) {
     closeModal();
 }
 
-// Сохраняем в глобальный доступ
+
+// ===== ДЕЛАЕМ ФУНКЦИИ ГЛОБАЛЬНЫМИ =====
+
 window.updateUI = updateUI;
+window.openStatsModal = openStatsModal;
+window.closeStatsModal = closeStatsModal;
+window.renderStats = renderStats;
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.renderModal = renderModal;
+window.renderLevels = renderLevels;
+window.renderTowers = renderTowers;
 window.selectWorldFromModal = selectWorldFromModal;
 window.selectLevel = selectLevel;
 window.selectTowerFromModal = selectTowerFromModal;
