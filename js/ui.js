@@ -1,4 +1,3 @@
-// ui.js
 function updateUI(game) {
     if (!game || !game.currentTower) {
         document.getElementById('towerName').textContent = 'Выберите башню';
@@ -9,31 +8,32 @@ function updateUI(game) {
         document.getElementById('attempts').textContent = '0';
         document.getElementById('progressBar').style.width = '0%';
         document.getElementById('progressText').textContent = '0%';
+        document.getElementById('towerDifficultyValue').textContent = '0.00';
         document.getElementById('btnClimb').disabled = true;
         return;
     }
     
     const tower = game.currentTower;
     const player = game.player;
+    const diffValue = tower.difficultyValue || 0;
+    const subTier = getSubTier(diffValue);
+    const mainName = DifficultyOrder[Math.floor(diffValue)] || 'Unknown';
+    
+    // Форматируем сложность с под-тиром
+    const formattedDiff = `${mainName} ${subTier.icon} ${subTier.label}`;
     
     document.getElementById('towerName').textContent = tower.name;
-    document.getElementById('difficultyBadge').textContent = tower.difficulty;
-    document.getElementById('towerType').textContent = `Тип: ${tower.difficulty}`;
+    document.getElementById('difficultyBadge').textContent = formattedDiff;
+    document.getElementById('difficultyBadge').title = `Сложность: ${diffValue.toFixed(2)}`; // подсказка при наведении
+    document.getElementById('towerType').textContent = `Тип: ${mainName}`;
     document.getElementById('currentFloor').textContent = tower.currentFloor;
     document.getElementById('maxFloor').textContent = tower.maxFloor;
     document.getElementById('attempts').textContent = tower.attempts || 0;
+    document.getElementById('towerDifficultyValue').textContent = diffValue.toFixed(2);
     
     const progress = (tower.currentFloor / tower.maxFloor) * 100;
     document.getElementById('progressBar').style.width = Math.min(100, progress) + '%';
     document.getElementById('progressText').textContent = Math.min(100, Math.round(progress)) + '%';
-    
-    document.getElementById('totalTowers').textContent = player.totalTowers;
-    document.getElementById('totalFloors').textContent = player.totalFloors;
-    document.getElementById('totalFalls').textContent = player.totalFalls;
-    
-    const fatigue = Math.round(player.fatigue);
-    document.getElementById('fatigue').textContent = fatigue + '%';
-    document.getElementById('fatigueBar').style.width = fatigue + '%';
     
     const consistency = Math.round(player.consistency);
     document.getElementById('consistency').textContent = consistency + '%';
@@ -59,51 +59,123 @@ function updateUI(game) {
     }
 }
 
-// ===== МОДАЛЬНОЕ ОКНО =====
+// ===== МОДАЛЬНОЕ ОКНО СТАТИСТИКИ =====
 
-function openModal() {
-    document.getElementById('towerModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    renderModal(game);
+function openStatsModal() {
+    const modal = document.getElementById('statsModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        renderStats(game);
+    }
 }
 
-function closeModal() {
-    document.getElementById('towerModal').classList.remove('active');
-    document.body.style.overflow = '';
+function closeStatsModal() {
+    const modal = document.getElementById('statsModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
-function renderModal(game) {
-    // Шаг 1: Игры (пока только EToH)
-    // Шаг 2: Миры (обновляем активную вкладку)
-    const world = game.modalWorld || 'ring';
-    document.querySelectorAll('.world-tab-modal').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.world === world);
-    });
+function renderStats(game) {
+    const body = document.getElementById('statsBody');
+    if (!body) return;
     
-    // Шаг 3: Уровни
-    renderLevels(game);
+    const player = game.player;
+    const avgSkill = game.getAverageSkill ? game.getAverageSkill() : 0;
+    const hardest = game.hardestTower;
     
-    // Шаг 4: Башни
-    renderTowers(game);
+    // Собираем все пройденные башни
+    const completedTowers = [];
+    if (game.towerProgress) {
+        for (const [name, data] of Object.entries(game.towerProgress)) {
+            if (data.completed) {
+                completedTowers.push({
+                    name: name,
+                    difficultyValue: data.difficultyValue || 0,
+                    difficulty: data.difficulty || 'Unknown',
+                    attempts: data.attempts || 0,
+                    floors: data.currentFloor || 0
+                });
+            }
+        }
+    }
+    
+    // Сортируем по сложности
+    completedTowers.sort((a, b) => b.difficultyValue - a.difficultyValue);
+    
+    // Форматируем сложность для отображения
+    function formatDiff(val) {
+        const main = DifficultyOrder[Math.floor(val)] || 'Unknown';
+        const sub = getSubTier(val);
+        return `${main} ${sub.icon} ${sub.label} (${val.toFixed(2)})`;
+    }
+    
+    body.innerHTML = `
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stats-number">${player.totalTowers}</div>
+                <div class="stats-label">🏆 Башен пройдено</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-number">${player.totalFloors}</div>
+                <div class="stats-label">📈 Всего этажей</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-number">${player.totalFalls}</div>
+                <div class="stats-label">💀 Падений</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-number">${avgSkill.toFixed(2)}</div>
+                <div class="stats-label">📊 Средний скилл</div>
+            </div>
+        </div>
+        
+        ${hardest ? `
+            <div class="stats-hardest">
+                <h3>🏆 СЛОЖНЕЙШАЯ ПРОЙДЕННАЯ БАШНЯ</h3>
+                <div class="hardest-info">
+                    <span class="hardest-name">${hardest.name}</span>
+                    <span class="hardest-diff">${formatDiff(hardest.difficultyValue)}</span>
+                    <span class="hardest-floors">${hardest.floors} этажей</span>
+                </div>
+            </div>
+        ` : `
+            <div class="stats-hardest">
+                <h3>🏆 СЛОЖНЕЙШАЯ ПРОЙДЕННАЯ БАШНЯ</h3>
+                <div class="hardest-info" style="color: #666;">Пока нет пройденных башен</div>
+            </div>
+        `}
+        
+        ${completedTowers.length > 0 ? `
+            <div class="stats-towers-list">
+                <h3>📋 ВСЕ ПРОЙДЕННЫЕ БАШНИ</h3>
+                <div class="towers-list">
+                    ${completedTowers.map(t => `
+                        <div class="tower-list-item">
+                            <span class="tower-list-name">${t.name}</span>
+                            <span class="tower-list-diff">${formatDiff(t.difficultyValue)}</span>
+                            <span class="tower-list-attempts">${t.attempts} попыток</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : `
+            <div class="stats-towers-list">
+                <h3>📋 ВСЕ ПРОЙДЕННЫЕ БАШНИ</h3>
+                <div style="color: #666; padding: 10px;">Пока нет пройденных башен</div>
+            </div>
+        `}
+    `;
 }
 
-function renderLevels(game) {
-    const grid = document.getElementById('levelGrid');
-    const world = game.modalWorld || 'ring';
-    const data = world === 'ring' ? game.rings : game.zones;
-    
-    grid.innerHTML = data.map((level, index) => `
-        <button class="level-btn-modal ${index === game.modalLevel ? 'active' : ''}"
-                data-index="${index}"
-                onclick="selectLevel(${index})">
-            ${level.name}
-            <span class="level-diff">${level.difficulty}</span>
-        </button>
-    `).join('');
-}
+// ===== МОДАЛЬНОЕ ОКНО ВЫБОРА БАШНИ =====
 
 function renderTowers(game) {
     const grid = document.getElementById('towerGrid');
+    if (!grid) return;
+    
     const world = game.modalWorld || 'ring';
     const data = world === 'ring' ? game.rings : game.zones;
     const level = data[game.modalLevel || 0];
@@ -113,13 +185,15 @@ function renderTowers(game) {
         return;
     }
     
-    // Получаем сохранённый прогресс по башням
     const towerProgress = game.towerProgress || {};
     
     grid.innerHTML = level.towers.map((tower, index) => {
         const progress = towerProgress[tower.name] || { currentFloor: 0, completed: false };
         const isCompleted = progress.completed || false;
         const isActive = game.currentTower && game.currentTower.name === tower.name;
+        const diffValue = tower.difficultyValue || 0;
+        const subTier = getSubTier(diffValue);
+        const mainName = DifficultyOrder[Math.floor(diffValue)] || 'Unknown';
         
         let statusText, statusClass;
         if (isCompleted) {
@@ -133,11 +207,14 @@ function renderTowers(game) {
             statusClass = 'locked';
         }
         
+        // Форматируем сложность для карточки
+        const diffDisplay = `${mainName} ${subTier.icon}`;
+        
         return `
             <div class="tower-card-modal ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}"
                  onclick="selectTowerFromModal(${index})">
                 <div class="tower-name-modal">${tower.name}</div>
-                <div class="tower-diff-modal">${tower.difficulty}</div>
+                <div class="tower-diff-modal">${diffDisplay} <span style="color:#666;font-size:10px;">${diffValue.toFixed(2)}</span></div>
                 <div class="tower-stats-modal">
                     <span>${tower.floors} этажей</span>
                     <span class="tower-status-modal ${statusClass}">${statusText}</span>
@@ -145,7 +222,11 @@ function renderTowers(game) {
                 <div class="tower-hover-info">
                     <div class="info-row">
                         <span class="label">Сложность</span>
-                        <span class="value">${tower.difficulty}</span>
+                        <span class="value">${mainName} ${subTier.icon} ${subTier.label}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Значение</span>
+                        <span class="value">${diffValue.toFixed(2)}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Всего этажей</span>
@@ -167,6 +248,12 @@ function renderTowers(game) {
     }).join('');
 }
 
+// Делаем функции глобальными
+window.updateUI = updateUI;
+window.openStatsModal = openStatsModal;
+window.closeStatsModal = closeStatsModal;
+window.renderStats = renderStats;
+window.renderTowers = renderTowers;
 // Функции выбора в модальном окне
 function selectWorldFromModal(world) {
     const game = window.game;
