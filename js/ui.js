@@ -1,43 +1,61 @@
 // ui.js
 function updateUI(game) {
+    if (!game || !game.currentTower) {
+        // Если башня не выбрана
+        document.getElementById('towerName').textContent = 'Выберите башню';
+        document.getElementById('difficultyBadge').textContent = '-';
+        document.getElementById('towerType').textContent = 'Тип: -';
+        document.getElementById('currentFloor').textContent = '0';
+        document.getElementById('maxFloor').textContent = '0';
+        document.getElementById('attempts').textContent = '0';
+        document.getElementById('progressBar').style.width = '0%';
+        document.getElementById('progressText').textContent = '0%';
+        return;
+    }
+    
     const tower = game.currentTower;
     const player = game.player;
     
     // Башня
     document.getElementById('towerName').textContent = tower.name;
-    document.getElementById('towerType').textContent = `Тип: ${tower.type.name}`;
-    document.getElementById('currentFloor').textContent = Math.max(0, Math.floor(tower.currentFloor));
+    document.getElementById('difficultyBadge').textContent = tower.difficulty;
+    document.getElementById('towerType').textContent = `Тип: ${tower.difficulty}`;
+    document.getElementById('currentFloor').textContent = tower.currentFloor;
     document.getElementById('maxFloor').textContent = tower.maxFloor;
-    
-    // Сложность
-    const badge = document.getElementById('difficultyBadge');
-    badge.textContent = tower.difficulty;
+    document.getElementById('attempts').textContent = tower.attempts || 0;
     
     // Прогресс
-    const progress = Math.max(0, (1 - tower.currentFloor / tower.maxFloor) * 100);
-    document.getElementById('progressBar').style.width = progress + '%';
-    document.getElementById('progressText').textContent = Math.floor(progress) + '%';
+    const progress = (tower.currentFloor / tower.maxFloor) * 100;
+    document.getElementById('progressBar').style.width = Math.min(100, progress) + '%';
+    document.getElementById('progressText').textContent = Math.min(100, Math.round(progress)) + '%';
     
     // Статистика
     document.getElementById('totalTowers').textContent = player.totalTowers;
     document.getElementById('totalFloors').textContent = player.totalFloors;
+    document.getElementById('totalFalls').textContent = player.totalFalls;
     
     // Статусы
-    document.getElementById('damage').textContent = Math.floor(player.clickPower);
-    document.getElementById('fatigue').textContent = Math.floor(player.fatigue) + '%';
-    document.getElementById('fatigueBar').style.width = player.fatigue + '%';
-    document.getElementById('regen').textContent = player.baseRegen.toFixed(1) + '/сек';
-    document.getElementById('consistency').textContent = Math.floor(player.consistency) + '%';
-    document.getElementById('consistencyBar').style.width = player.consistency + '%';
+    const fatigue = Math.round(player.fatigue);
+    document.getElementById('fatigue').textContent = fatigue + '%';
+    document.getElementById('fatigueBar').style.width = fatigue + '%';
     
-    // Auto-badge
-    const autoBadge = document.getElementById('autoBadge');
-    if (player.consistency > 50) {
-        autoBadge.classList.add('active');
-        autoBadge.textContent = 'АВТО-КЛИК ' + Math.floor((player.consistency - 50) / 50 * 100) + '%';
+    const consistency = Math.round(player.consistency);
+    document.getElementById('consistency').textContent = consistency + '%';
+    document.getElementById('consistencyBar').style.width = consistency + '%';
+    
+    // Шанс падения
+    if (tower.currentFloor < tower.maxFloor) {
+        const progressForFall = tower.currentFloor / tower.maxFloor;
+        const fallChance = Math.round((progressForFall * (1 - player.consistency / 100)) * 100);
+        document.getElementById('fallChance').textContent = fallChance + '%';
+        document.getElementById('fallChance').style.color = fallChance > 50 ? '#e74c3c' : '#f39c12';
     } else {
-        autoBadge.classList.remove('active');
+        document.getElementById('fallChance').textContent = '✅ Пройдена!';
+        document.getElementById('fallChance').style.color = '#2ecc71';
     }
+    
+    // Прогресс статус
+    document.getElementById('progressStatus').textContent = Math.round(progress) + '%';
     
     // Лог
     const logs = ['log1', 'log2', 'log3'];
@@ -45,3 +63,6 @@ function updateUI(game) {
         document.getElementById(logs[i]).textContent = '> ' + (game.log[i] || '');
     }
 }
+
+// Сохраняем функцию в глобальный доступ
+window.updateUI = updateUI;
