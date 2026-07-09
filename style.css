@@ -1,116 +1,342 @@
-/* Обнуляем отступы */
+/* style.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background: #0b0e14;
-    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #e8d5b0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: radial-gradient(ellipse at center, #1a0b1e 0%, #0a0a0a 70%);
 }
 
-.container {
-    background: #141a24;
-    padding: 30px;
-    border-radius: 30px;
-    box-shadow: 0 0 40px rgba(0, 150, 255, 0.1);
-    width: 400px;
-    text-align: center;
-    border: 1px solid #2a3344;
+#app {
+    max-width: 800px;
+    width: 100%;
+    padding: 20px;
 }
 
-h1 {
-    font-size: 28px;
-    color: #80cbc4;
+/* Шапка */
+.header {
+    background: linear-gradient(135deg, #2c1a30, #1a0b1e);
+    border: 1px solid #4a2a50;
+    border-radius: 12px;
+    padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 30px rgba(142, 68, 173, 0.2);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.skull {
+    font-size: 28px;
+    color: #c0392b;
+    text-shadow: 0 0 20px #c0392b;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.logo h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #e8d5b0, #f1c40f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     letter-spacing: 2px;
 }
 
-.resource-display {
-    font-size: 48px;
-    font-weight: bold;
-    background: #1e2636;
-    padding: 15px;
-    border-radius: 20px;
+.version {
+    font-size: 12px;
+    color: #8e44ad;
+    background: #2c1a30;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+.stats-header {
+    display: flex;
+    gap: 30px;
+    font-size: 14px;
+    color: #bdc3c7;
+    padding-top: 10px;
+    border-top: 1px solid #2c1a30;
+}
+
+.stats-header strong {
+    color: #e8d5b0;
+}
+
+/* Карточка башни */
+.tower-card {
+    background: linear-gradient(145deg, #1a0b1e, #120a16);
+    border: 1px solid #4a2a50;
+    border-radius: 16px;
+    padding: 30px;
     margin-bottom: 20px;
-    border: 1px solid #2e3a4e;
+    box-shadow: 0 8px 40px rgba(142, 68, 173, 0.15);
+    transition: all 0.3s ease;
 }
 
-.resource-display .icon {
-    margin-right: 15px;
-}
-.count {
-    color: #ffd54f; /* Золотой цвет для ресурса */
+.tower-card:hover {
+    border-color: #8e44ad;
+    box-shadow: 0 8px 50px rgba(142, 68, 173, 0.25);
 }
 
-/* Главная кнопка клика */
-.click-btn {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    font-size: 28px;
-    font-weight: bold;
-    background: radial-gradient(circle at 30% 30%, #ffb74d, #e65100);
-    border: none;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 150, 0, 0.4);
-    transition: transform 0.1s ease;
-    margin: 15px 0;
-}
-.click-btn:active {
-    transform: scale(0.90); /* Эффект нажатия */
-}
-
-.per-second {
-    color: #9aa9bb;
-    font-size: 18px;
-    margin-bottom: 30px;
-}
-
-/* Секция улучшений */
-.upgrades h2 {
-    font-size: 18px;
-    color: #78909c;
-    text-transform: uppercase;
-    letter-spacing: 3px;
+.tower-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 15px;
 }
 
-.upgrade-card {
-    background: #1e2636;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    border-radius: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #2a3344;
+.tower-icon {
+    font-size: 32px;
 }
 
-.buy-btn {
-    background: #2e7d32;
+.tower-header h2 {
+    font-size: 24px;
+    color: #e8d5b0;
+}
+
+.difficulty-badge {
+    margin-left: auto;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #2c1a30;
+    color: #e74c3c;
+    border: 1px solid #c0392b;
+}
+
+.tower-info {
+    display: flex;
+    gap: 30px;
+    font-size: 14px;
+    color: #bdc3c7;
+    margin-bottom: 15px;
+}
+
+.tower-floors {
+    color: #e8d5b0;
+}
+
+/* Прогресс-бар */
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background: #0a0a0a;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #2c1a30;
+    margin: 10px 0 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #c0392b, #e74c3c, #f1c40f);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 20px rgba(192, 57, 43, 0.3);
+}
+
+.progress-text {
+    text-align: right;
+    font-size: 12px;
+    color: #8e44ad;
+}
+
+/* Сетка статусов */
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #2c1a30;
+}
+
+.status-item {
+    background: #0a0a0a;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #1a0b1e;
+}
+
+.status-item .label {
+    font-size: 13px;
+    color: #8e44ad;
+}
+
+.status-item .value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e8d5b0;
+    float: right;
+}
+
+.mini-bar {
+    width: 100%;
+    height: 4px;
+    background: #1a0b1e;
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.mini-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+}
+
+.fatigue-fill {
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+}
+
+.consistency-fill {
+    background: linear-gradient(90deg, #8e44ad, #3498db);
+}
+
+.auto-badge {
+    font-size: 10px;
+    color: #2ecc71;
+    background: #0a1a0a;
+    padding: 2px 8px;
+    border-radius: 10px;
+    float: right;
+    display: none;
+}
+
+.auto-badge.active {
+    display: inline-block;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Лог */
+.log-area {
+    background: #0a0a0a;
+    border: 1px solid #1a0b1e;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    min-height: 70px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.log-entry {
+    color: #8e44ad;
+    padding: 2px 0;
+}
+
+.log-entry:first-child {
+    color: #e8d5b0;
+}
+
+/* Кнопки */
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 20px;
     border: none;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-.buy-btn:hover {
-    background: #43a047;
-    transform: scale(1.05);
+
+.btn-primary {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: white;
+    box-shadow: 0 4px 20px rgba(192, 57, 43, 0.3);
 }
-.buy-btn:disabled {
-    background: #444;
-    color: #777;
-    cursor: not-allowed;
-    transform: none;
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 30px rgba(192, 57, 43, 0.5);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+.btn-secondary {
+    background: #2c1a30;
+    color: #e8d5b0;
+    border: 1px solid #4a2a50;
+}
+
+.btn-secondary:hover {
+    background: #3c2a40;
+    border-color: #8e44ad;
+}
+
+.btn-danger {
+    background: #1a0b1e;
+    color: #8e44ad;
+    border: 1px solid #4a2a50;
+}
+
+.btn-danger:hover {
+    background: #2c1a30;
+    border-color: #c0392b;
+    color: #e74c3c;
+}
+
+/* Подвал */
+.footer {
+    margin-top: 20px;
+    padding: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #4a2a50;
+    border-top: 1px solid #1a0b1e;
+}
+
+.footer span {
+    margin: 0 15px;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+    .controls {
+        flex-direction: column;
+    }
+    .btn {
+        min-width: unset;
+    }
 }
