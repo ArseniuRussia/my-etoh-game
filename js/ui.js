@@ -11,7 +11,7 @@ function updateUI(game) {
     
     // Сложность
     const badge = document.getElementById('difficultyBadge');
-    badge.textContent = '☠'.repeat(tower.difficultyStars) + ' ' + tower.difficulty;
+    badge.textContent = tower.difficulty;
     
     // Прогресс
     const progress = Math.max(0, (1 - tower.currentFloor / tower.maxFloor) * 100);
