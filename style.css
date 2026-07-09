@@ -1,0 +1,116 @@
+/* Обнуляем отступы */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #0b0e14;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: #141a24;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 0 40px rgba(0, 150, 255, 0.1);
+    width: 400px;
+    text-align: center;
+    border: 1px solid #2a3344;
+}
+
+h1 {
+    font-size: 28px;
+    color: #80cbc4;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.resource-display {
+    font-size: 48px;
+    font-weight: bold;
+    background: #1e2636;
+    padding: 15px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #2e3a4e;
+}
+
+.resource-display .icon {
+    margin-right: 15px;
+}
+.count {
+    color: #ffd54f; /* Золотой цвет для ресурса */
+}
+
+/* Главная кнопка клика */
+.click-btn {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: bold;
+    background: radial-gradient(circle at 30% 30%, #ffb74d, #e65100);
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 150, 0, 0.4);
+    transition: transform 0.1s ease;
+    margin: 15px 0;
+}
+.click-btn:active {
+    transform: scale(0.90); /* Эффект нажатия */
+}
+
+.per-second {
+    color: #9aa9bb;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* Секция улучшений */
+.upgrades h2 {
+    font-size: 18px;
+    color: #78909c;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.upgrade-card {
+    background: #1e2636;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #2a3344;
+}
+
+.buy-btn {
+    background: #2e7d32;
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.buy-btn:hover {
+    background: #43a047;
+    transform: scale(1.05);
+}
+.buy-btn:disabled {
+    background: #444;
+    color: #777;
+    cursor: not-allowed;
+    transform: none;
+}
