@@ -55,7 +55,7 @@ function saveGame(game) {
         timestamp: Date.now()
     };
     localStorage.setItem('etbh_save', JSON.stringify(data));
-    game.addLog('💾 Игра сохранена!');
+    game.addLog(' Игра сохранена!');
     updateUI(game);
 }
 
@@ -68,7 +68,7 @@ function loadGame(game) {
         game.player = data.player;
         game.currentTower = data.tower;
         game.log = data.log || ['📂 Загрузка завершена'];
-        game.addLog('📂 Прогресс восстановлен!');
+        game.addLog('Прогресс восстановлен!');
         return true;
     } catch (e) {
         return false;
